@@ -1,40 +1,43 @@
 
 # City Services Rebalance Mod
-This mod allows to build a self-sufficient city in terms of resources production and consumption. Except for a single change in HouseholdBehaviorSystem, it achieves that by only modifying existing game parameters like companies profitability, resources price and base consumption or workplaces complexity. The mod's effects become more visible and useful the bigger the city is (>100k).
+The mod allows for virtually any changes to City Services buildings. At the moment, it mainly **increases number of workers in City Services buildings** and does other small adjustments (see below for details). It does so by changing Prefab parameters during the game start-up, so no changes to game systems are required. In the long term this can serve as a foundation for **tuning and balancing any parameter**. I encourage to contribute to the mod by raising issues and/or PRs on GitHub with proposed changes and rationale behind such changes.
 
-Version 0.3 introduces the config file where all modded params are kept and can be easily modified.
+Number of configured buildings and extensions: 197.
 
-**Important note.**
-Tuning and balancing is an iterative process. The feedback about how companies and economy behave is highly appreciated and welcomed. Please see the Support paragraph below on how to reach me. If you decide to try out the mod, please make sure to turn off other mods that affect economy, resource management and companies. While the mod technically will work as advertised, the results produced may be distorted and not very useful for further balancing.
-
-### Key features.
- - (v0.3) Configuration in the xml file can be easily modified.
- 
-### Comparison to vanilla city
- - It is possible to turn on the mod on an existing city. The effects will be seen after few in-game hours, but it will take a few in-game days for all processes to fully adjust.
 
 ## Features
 
-### Config file (v0.3)
-  - Entire mod configuration is now kept in the xml config file that comes together with the mod.
-  - The file is loaded when the game is started, so for new params to take effect you need to restart the game.
-  - Note for the future. Please note that new mod versions will overwrite the file so if you did any changes and want to keep them - make a backup before update and then reapply to the updated version.
+### Version 1.0
+- All buildings have more workplaces and some have a bit different requirements as for what education levels are required. There is no formula used, all have been set manually taking into consideration various aspects. Some have only slightly more workers, but some have many more. You need to take a look into Config.xml to find out about specific buildings.
+- Crematorium has 2x higher processing rate to handle increased deaths from Population Rebalance.
+- Post Sorting Facility have 2x higher sorting speed.
 
-### Workplaces distribution
- - The structure of workfoce education does not match the workplaces distribution, by a huge factor.
- - In the vanilla game, the population eventually becomes well and highly educated, and there is not enough jobs for them. As a result, most of highly educated cims will be underemployed.
- - The mod "shifts" workplaces distribution to higher education levels. There will be much more demand for well and highly educated cims.
- - (v0.3) Industrial buildings have increased workplace capacity by 30%, office buildings by 20% and commercial buildings by 20%. Can be turned off in the config file.
+### Building configuration
+- The configuration is kept in the `Config.xml` file that comes together with the mod. Please do not confuse with BepInEx `RealCity.cfg` config file.
+- The file is loaded when the game is started, so for new params to take effect you need to restart the game.
+- Note for the future. Please note that new mod versions will overwrite the Config.xml file so if you did any customizations and want to keep them - make a backup before update and then reapply to the updated version.
+
+### Customizing the parameters
+- As for now the mod allows to change any parameter that is stored as either an integer number (so Enums too) or a float number. This covers like 90% of params :)
+- It allows to change a singular field in a specific component within a prefab.
+- To apply your own changes, you need to know a) prefab's name - almost all are already in the Config.xml, so just find what you need b) component type c) field name and type.
+
+### Turning the mod on/off on existing cities
+- City Service buildings have some of their params set when plopped (e.g. workplaces). The new params will be applied to new buildings. You need to rebuild existing buildings in order to fully apply new params.
+- Conversly, when the mod is deactivated, the buildings will retain their modded params. New buildings will have again vanilla params.
+
 
 ## Technical
 
 ### Requirements and Compatibility
 - Cities Skylines II version 1.0.19f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
 - BepInEx 5.
-- Modified systems: HouseholdBehaviorSystem.
+- The mod does NOT modify savefiles.
+- The mod does NOT modify game systems.
 
 ### Installation
-1. Place the `RealEco.dll` file in your BepInEx `Plugins` folder.
+1. Place the `RealCity.dll` file in your BepInEx `Plugins` folder.
+2. The BepInEx config file is automatically created in BepInEx\config when the game is run once.
 
 ### Known Issues
 - Nothing atm.
@@ -45,7 +48,7 @@ Tuning and balancing is an iterative process. The feedback about how companies a
 
 ### Support
 - Please report bugs and issues on [GitHub](https://github.com/Infixo/CS2-RealEco).
-- You may also leave comments on [Discord1](https://discord.com/channels/1169011184557637825/1207641575362920508) or [Discord2](https://discord.com/channels/1024242828114673724/1207641284647587922).
+- You may also leave comments on [Discord1](https://discord.com/channels/1169011184557637825/1215734718654451892) or [Discord2](https://discord.com/channels/1024242828114673724/1215735062428123196).
 
 ## Disclaimers and Notes
 
