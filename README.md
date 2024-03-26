@@ -30,7 +30,7 @@ Number of configured buildings and extensions: **197**.
 ## Technical
 
 ### Requirements and Compatibility
-- Cities Skylines II version 1.0.19f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
+- Cities Skylines II version 1.1.0f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
 - BepInEx 5.
 - The mod does NOT modify savefiles.
 - The mod does NOT modify game systems.
@@ -43,6 +43,8 @@ Number of configured buildings and extensions: **197**.
 - Nothing atm.
 
 ### Changelog
+- v0.2.0 (2024-03-20)
+  - Mod updated for v1.1 of the game.
 - v0.1.0 (2024-03-08)
   - Initial build.
 

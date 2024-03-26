@@ -12,7 +12,7 @@
 		<AssemblyName>RealCity</AssemblyName>
 		<RootNamespace>RealCity</RootNamespace>
 		<Description>Real City Services - rebalances city services.</Description>
-		<Version>0.1.0</Version>
+		<Version>0.2.0</Version>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<LangVersion>latest</LangVersion>
 		<RestoreAdditionalProjectSources>
@@ -49,12 +49,14 @@
 		Make sure you have a private `libcs2` repository with the appropriate DLLs for this to work.
 		DO NOT make the proprietary DLLs for the game public, as the files are owned by PDX/CO. 
 	-->
+	<!--
 	<ItemGroup>
 		<Reference Include="libcs2/Colossal.*.dll" Private="False" />
 		<Reference Include="libcs2/Game.dll" Private="False" />
 		<Reference Include="libcs2/Unity.*.dll" Private="False" />
 	</ItemGroup>
-
+	-->
+	
 	<!--
 		Everything related to BepInEx and Harmony
 	-->

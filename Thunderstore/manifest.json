@@ -1,7 +1,7 @@
 {
     "name": "City_Services_Rebalance",
     "description": "More workers in City Services and other various tweaks.",
-    "version_number": "0.1.0",
+    "version_number": "0.2.0",
     "dependencies": [
       "BepInEx-BepInExPack-5.4.2100"
     ],
