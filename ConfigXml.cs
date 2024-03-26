@@ -51,7 +51,7 @@ public class PrefabXml
 
     public void DumpToLog()
     {
-        Plugin.Log(ToString());
+        Mod.log.Info(ToString());
         foreach (ComponentXml component in Components)
             component.DumpToLog();
     }
@@ -86,9 +86,9 @@ public class ComponentXml
 
     public void DumpToLog()
     {
-        Plugin.Log(ToString());
+        Mod.log.Info(ToString());
         foreach (FieldXml field in Fields)
-            Plugin.Log(field.ToString());
+            Mod.log.Info(field.ToString());
     }
 
     internal bool TryGetField(string name, out FieldXml field)
@@ -163,11 +163,7 @@ public class FieldXml
 public static class ConfigToolXml
 {
     private static readonly string _configFileName = "Config.xml";
-    private static readonly string _assemblyPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-    private static readonly string _configFile = Path.Combine(_assemblyPath, _configFileName); // TODO: change to a CO framework method
-
     private static readonly string _dumpFileName = "Config_Dump.xml";
-    private static readonly string _dumpFile = Path.Combine(_assemblyPath, _dumpFileName); // TODO: change to a CO framework method
 
     private static ConfigurationXml _config = null;
     public static ConfigurationXml Config { get { return _config; } }
@@ -176,12 +172,14 @@ public static class ConfigToolXml
     /// Loads prefab config data from a file in the mod directory.
     /// Settings are set to null id there is any problem during loading.
     /// </summary>
-    public static void LoadConfig()
+    public static void LoadConfig(string assetPath)
     {
+        //Mod.Log($"{assetPath}");
+        //Mod.Log($"{Path.GetDirectoryName(assetPath)}");
         try
         {
             XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationXml));
-            using (FileStream fs = new FileStream(_configFile, FileMode.Open))
+            using (FileStream fs = new FileStream(Path.Combine(Path.GetDirectoryName(assetPath), _configFileName), FileMode.Open))
             {
                 _config = (ConfigurationXml)serializer.Deserialize(fs);
             }
@@ -190,43 +188,49 @@ public static class ConfigToolXml
             
             if (Config.ValidPrefabTypes.Length == 0)
             {
-                Plugin.Log("Warning! No valid prefab types are defined.");
+                Mod.log.Info("Warning! No valid prefab types are defined.");
             }
             else
             {
-                Plugin.LogIf($"VALID PREFAB TYPES {Config.ValidPrefabTypes.Length}");
+                Mod.LogIf($"VALID PREFAB TYPES {Config.ValidPrefabTypes.Length}");
                 foreach (string name in Config.ValidPrefabTypes)
-                    Plugin.LogIf(name);
+                    Mod.LogIf(name);
             }
             
-            if (Plugin.Logging.Value)
+            if (Mod.setting.Logging)
             {
-                Plugin.Log("PREFAB CONFIG DATA");
+                Mod.log.Info("PREFAB CONFIG DATA");
                 foreach (PrefabXml prefab in Config?.Prefabs)
                     prefab.DumpToLog();
             }
+            // Save copy
+            SaveConfig();
         }
         catch (Exception e)
         {
-            Plugin.Log($"ERROR: Cannot load settings, exception {e.Message}");
+            Mod.log.Info($"ERROR: Cannot load settings, exception {e.Message}");
             _config = null;
         }
     }
-
+    
     public static void SaveConfig()
     {
         try
         {
+            string appDataDir = Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+            string dumpDir = Path.Combine(appDataDir, @"LocalLow\Colossal Order\Cities Skylines II\Mods", Mod.modAsset == null ? "RealCity" : Mod.modAsset.name);
+            string dumpFile = Path.Combine(dumpDir, _dumpFileName);
             XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationXml));
-            using (FileStream fs = new FileStream(_dumpFile, FileMode.Create))
+            using (FileStream fs = new FileStream(dumpFile, FileMode.Create))
             {
                 serializer.Serialize(fs, Config);
             }
-            Plugin.Log($"Configuration saved to file {_dumpFile}.");
+            Mod.log.Info($"Configuration saved to file {dumpFile}.");
         }
         catch (Exception e)
         {
-            Plugin.Log($"ERROR: Cannot save configuration, exception {e.Message}.");
+            Mod.log.Info($"ERROR: Cannot save configuration, exception {e.Message}.");
         }
     }
+    
 }
