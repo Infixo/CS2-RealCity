@@ -180,8 +180,16 @@ public static class ConfigToolXml
         //Mod.Log($"{Path.GetDirectoryName(assetPath)}");
         try
         {
+            string configDir = Path.Combine(Path.GetDirectoryName(assetPath));
+            if (Mod.setting.UseLocalConfig)
+            {
+                string appDataDir = Path.GetDirectoryName(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+                configDir = Path.Combine(appDataDir, @"LocalLow\Colossal Order\Cities Skylines II\Mods", Mod.modAsset == null ? "RealCity" : Mod.modAsset.name);
+            }
+            Mod.log.Info($"Using {(Mod.setting.UseLocalConfig ? "local" : "default")} {_configFileName} at {configDir}.");
+
             XmlSerializer serializer = new XmlSerializer(typeof(ConfigurationXml));
-            using (FileStream fs = new FileStream(Path.Combine(Path.GetDirectoryName(assetPath), _configFileName), FileMode.Open))
+            using (FileStream fs = new FileStream(Path.Combine(configDir, _configFileName), FileMode.Open))
             {
                 _config = (ConfigurationXml)serializer.Deserialize(fs);
             }

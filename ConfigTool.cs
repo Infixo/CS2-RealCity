@@ -216,8 +216,11 @@ public static class ConfigTool
             ConfigureComponent(componentXml, prefab, entity);
     }
 
-    public static void Apply()
+    public static void ReadAndApply()
     {
+        // READ CONFIG DATA
+        ConfigToolXml.LoadConfig(Mod.modAsset.path);
+
         m_PrefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
         m_EntityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
 

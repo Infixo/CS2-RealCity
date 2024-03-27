@@ -44,14 +44,12 @@ public class Mod : IMod
         setting = new Setting(this);
         setting.RegisterInOptionsUI();
         GameManager.instance.localizationManager.AddSource("en-US", new LocaleEN(setting));
+        setting._Hidden = false;
 
         AssetDatabase.global.LoadSettings(nameof(RealCity), setting, new Setting(this));
 
-        // READ CONFIG DATA
-        ConfigToolXml.LoadConfig(asset.path);
-
-        // APPLY CONFIG
-        ConfigTool.Apply();
+        // READ AND APPLY CONFIG
+        ConfigTool.ReadAndApply();
     }
 
     public void OnDispose()
