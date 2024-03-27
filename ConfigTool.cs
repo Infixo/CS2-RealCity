@@ -3,13 +3,15 @@ using System.Reflection;
 using System.Collections.Generic;
 using Unity.Entities;
 using Game.Prefabs;
-//using HarmonyLib;
+using Game.Economy;
 
 namespace RealCity.Config;
 
-//[HarmonyPatch]
-public static class ConfigTool_Patches
+public static class ConfigTool
 {
+    private static PrefabSystem m_PrefabSystem;
+    private static EntityManager m_EntityManager;
+
     public static void DumpFields(PrefabBase prefab, ComponentBase component)
     {
         string className = component.GetType().Name;
@@ -30,6 +32,7 @@ public static class ConfigTool_Patches
         }
     }
 
+    // NOT USED ATM
     /// <summary>
     /// Configures a specific component withing a specific prefab according to config data.
     /// </summary>
@@ -98,88 +101,150 @@ public static class ConfigTool_Patches
         if (Mod.setting.Logging) DumpFields(prefab, component); // debug
     }
 
+    // Method to change the value of a field in an ECS component by name
+    // NOT USED
+    public static void SetFieldValue<T>(ref T component, string fieldName, object newValue) where T : struct, IComponentData
+    {
+        Type type = typeof(T);
+        FieldInfo field = type.GetField(fieldName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+        if (field != null)
+        {
+            object oldValue = field.GetValue(component);
+            field.SetValueDirect(__makeref(component), newValue);
+            Mod.log.Info($"{type.Name}.{field.Name}: {oldValue} -> {field.GetValue(component)} ({field.FieldType})");
+        }
+        else
+        {
+            Mod.log.Info($"Field '{fieldName}' not found in struct '{type.Name}'.");
+        }
+    }
+
+    // NOT USED - CRASHES THE GAME ATM
+    public static void ConfigureComponentData<T>(ComponentXml compXml, ref T component) where T : struct, IComponentData
+    {
+        Type type = typeof(T);
+        FieldInfo[] fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        foreach (FieldInfo field in fields)
+        {
+            object oldValue = field.GetValue(component);
+            // change it
+            if (compXml.TryGetField(field.Name, out FieldXml fieldXml))
+            {
+                // TODO: extend for other field types
+                if (field.FieldType == typeof(float))
+                {
+                    field.SetValueDirect(__makeref(component), fieldXml.ValueFloat);
+                }
+                else
+                {
+                    field.SetValueDirect(__makeref(component), fieldXml.ValueInt);
+                }
+                Mod.log.Info($"{type.Name}.{field.Name}: {oldValue} -> {field.GetValue(component)} ({field.FieldType})");
+            }
+            else
+                Mod.LogIf($"{type.Name}.{field.Name}: {oldValue}");
+        }
+    }
+
+    /// <summary>
+    /// Configures a specific component within a specific prefab according to config data.
+    /// </summary>
+    /// <param name="compXml"></param>
+    /// <param name="prefab"></param>
+    /// <param name="entity"></param>
+    private static void ConfigureComponent(ComponentXml compXml, PrefabBase prefab, Entity entity)
+    {
+        // Infixo: first version which is not yet dynamic :(
+        FieldXml fieldXml;
+        switch (compXml.Name)
+        {
+            case "WorkplaceData":
+                if (m_PrefabSystem.TryGetComponentData<WorkplaceData>(prefab, out WorkplaceData workplaceData))
+                {
+                    if (compXml.TryGetField("m_Complexity", out fieldXml))
+                    {
+                        workplaceData.m_Complexity = (WorkplaceComplexity)fieldXml.ValueInt;
+                    }
+                    if (compXml.TryGetField("m_MaxWorkers", out fieldXml))
+                    {
+                        workplaceData.m_MaxWorkers = (int)fieldXml.ValueInt;
+                    }
+                    m_PrefabSystem.AddComponentData<WorkplaceData>(prefab, workplaceData);
+                    Mod.log.Info($"{prefab.name}.{compXml.Name}: {workplaceData.m_Complexity} {workplaceData.m_MaxWorkers}");
+                }
+                break;
+            case "DeathcareFacilityData":
+                if (m_PrefabSystem.TryGetComponentData<DeathcareFacilityData>(prefab, out DeathcareFacilityData deathcareFacilityData))
+                {
+                    if (compXml.TryGetField("m_ProcessingRate", out fieldXml))
+                    {
+                        deathcareFacilityData.m_ProcessingRate = (float)fieldXml.ValueFloat;
+                    }
+                    m_PrefabSystem.AddComponentData<DeathcareFacilityData>(prefab, deathcareFacilityData);
+                    Mod.log.Info($"{prefab.name}.{compXml.Name}: {deathcareFacilityData.m_ProcessingRate}");
+                }
+                break;
+            case "PostFacilityData":
+                if (m_PrefabSystem.TryGetComponentData<PostFacilityData>(prefab, out PostFacilityData postFacilityData))
+                {
+                    if (compXml.TryGetField("m_SortingRate", out fieldXml))
+                    {
+                        postFacilityData.m_SortingRate = (int)fieldXml.ValueInt;
+                    }
+                    m_PrefabSystem.AddComponentData<PostFacilityData>(prefab, postFacilityData);
+                    Mod.log.Info($"{prefab.name}.{compXml.Name}: {postFacilityData.m_SortingRate}");
+                }
+                break;
+            default:
+                Mod.log.Warn($"{compXml} is not supported.");
+                break;
+        }
+    }
+
     /// <summary>
     /// Configures a specific prefab according to the config data.
     /// </summary>
+    /// <param name="prefabXml"></param>
     /// <param name="prefab"></param>
-    /// <param name="prefabConfig"></param>
-    private static void ConfigurePrefab(PrefabBase prefab, PrefabXml prefabConfig)
+    /// <param name="entity"></param>
+    private static void ConfigurePrefab(PrefabXml prefabXml, PrefabBase prefab, Entity entity)
     {
         Mod.LogIf($"{prefab.name}: valid {prefab.GetType().Name}");
-        // check first if the main prefab needs to be changed
-        ConfigureComponent(prefab, prefabConfig, prefab);
         // iterate through components and see which ones need to be changed
-        foreach (ComponentBase component in prefab.components)
-            ConfigureComponent(prefab, prefabConfig, component);
+        foreach (ComponentXml componentXml in prefabXml.Components)
+            ConfigureComponent(componentXml, prefab, entity);
     }
 
-    //[HarmonyPatch(typeof(Game.Prefabs.PrefabSystem), "AddPrefab")]
-    //[HarmonyPrefix]
-    public static bool PrefabSystem_AddPrefab_Prefix(object __instance, PrefabBase prefab)
+    public static void Apply()
     {
-        if (ConfigToolXml.Config.IsPrefabValid(prefab.GetType().Name))
+        m_PrefabSystem = World.DefaultGameObjectInjectionWorld.GetOrCreateSystemManaged<PrefabSystem>();
+        m_EntityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
+
+        foreach (PrefabXml prefabXml in ConfigToolXml.Config.Prefabs)
         {
-            if (ConfigToolXml.Config.TryGetPrefab(prefab.name, out PrefabXml prefabConfig))
+            PrefabID prefabID = new PrefabID(prefabXml.Type, prefabXml.Name);
+            if (m_PrefabSystem.TryGetPrefab(prefabID, out PrefabBase prefab) && m_PrefabSystem.TryGetEntity(prefab, out Entity entity))
             {
-                ConfigurePrefab(prefab, prefabConfig);
+                if (ConfigToolXml.Config.IsPrefabValid(prefab.GetType().Name))
+                {
+                    ConfigurePrefab(prefabXml, prefab, entity);
+                }
+                else
+                    Mod.log.Info($"{prefab.name}: SKIP {prefab.GetType().Name}");
             }
             else
-                Mod.LogIf($"{prefab.name}: SKIP {prefab.GetType().Name}");
+                Mod.log.Warn($"Failed to retrieve {prefabXml} from the PrefabSystem.");
         }
-        // 240301 extract specific components
-        /*
-        ConfigurationXml config = ConfigToolXml.Config;
-        if (prefab.Has<Workplace>())
+    }
+
+    // List components from entity
+    internal static void ListComponents(PrefabBase prefab, Entity entity)
+    {
+        foreach (ComponentType componentType in m_EntityManager.GetComponentTypes(entity))
         {
-            Workplace comp = prefab.GetComponent<Workplace>();
-            PrefabXml prefabConfig = default(PrefabXml);
-            if (!config.TryGetPrefab(prefab.name, out prefabConfig))
-                config.Prefabs.Add(new PrefabXml { Name = prefab.name, Components = new List<ComponentXml>() });
-            if (config.TryGetPrefab(prefab.name, out prefabConfig))
-            {
-                ComponentXml compConfig = default(ComponentXml);
-                if (!prefabConfig.TryGetComponent("Workplace", out compConfig))
-                    prefabConfig.Components.Add(new ComponentXml { Name = "Workplace", Fields = new List<FieldXml>() });
-                if (prefabConfig.TryGetComponent("Workplace", out compConfig))
-                {
-                    if (!compConfig.TryGetField("m_Workplaces", out FieldXml field1Config))
-                        compConfig.Fields.Add(new FieldXml { Name = "m_Workplaces", ValueInt = comp.m_Workplaces });
-                    if (!compConfig.TryGetField("m_Complexity", out FieldXml field2Config))
-                        compConfig.Fields.Add(new FieldXml { Name = "m_Complexity", ValueInt = (int)comp.m_Complexity });
-                }
-            }
+            Mod.log.Info($"{prefab.GetType().Name}.{prefab.name}.{componentType.GetManagedType().Name}: {componentType}");
         }
-        */
-        return true;
-    }
-
-    // Part 1: This is called 1035 times
-    /*
-    [HarmonyPatch(typeof(Game.Prefabs.AssetCollection), "AddPrefabsTo")]
-    [HarmonyPostfix]
-    public static void AddPrefabsTo_Postfix()
-    {
-        Plugin.Log("**************************** Game.Prefabs.AssetCollection.AddPrefabsTo");
-    }
-    */
-
-    // Part 2: This is called 1 time
-    /*
-    [HarmonyPatch(typeof(Game.SceneFlow.GameManager), "LoadPrefabs")]
-    [HarmonyPostfix]
-    public static void LoadPrefabs_Postfix()
-    {
-        Plugin.Log("**************************** Game.SceneFlow.GameManager.LoadPrefabs");
-    }
-    */
-
-    // Part 3: This is called 1 time
-    //[HarmonyPatch(typeof(Game.Prefabs.PrefabInitializeSystem), "OnUpdate")]
-    //[HarmonyPostfix]
-    public static void OnUpdate_Postfix()
-    {
-        //Plugin.Log("**************************** Game.Prefabs.PrefabInitializeSystem.OnUpdate");
-        //if (true) ConfigToolXml.SaveConfig();
     }
 }
 

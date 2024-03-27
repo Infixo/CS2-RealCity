@@ -2,7 +2,6 @@
 using System.IO;
 using System.Xml.Serialization;
 using System.Collections.Generic;
-using System.Reflection;
 
 namespace RealCity.Config;
 
@@ -38,6 +37,9 @@ public class ConfigurationXml
 
 public class PrefabXml
 {
+    [XmlAttribute("type")]
+    public string Type { get; set; }
+
     [XmlAttribute("name")]
     public string Name { get; set; }
 
@@ -46,7 +48,7 @@ public class PrefabXml
 
     public override string ToString()
     {
-        return $"PrefabXml: {Name}";
+        return $"PrefabXml: {Type}.{Name}";
     }
 
     public void DumpToLog()

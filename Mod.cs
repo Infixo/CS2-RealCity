@@ -6,6 +6,7 @@ using Game.Prefabs;
 using Game.SceneFlow;
 using System.Reflection;
 using System;
+using RealCity.Config;
 
 namespace RealCity;
 
@@ -47,7 +48,10 @@ public class Mod : IMod
         AssetDatabase.global.LoadSettings(nameof(RealCity), setting, new Setting(this));
 
         // READ CONFIG DATA
-        Config.ConfigToolXml.LoadConfig(asset.path);
+        ConfigToolXml.LoadConfig(asset.path);
+
+        // APPLY CONFIG
+        ConfigTool.Apply();
     }
 
     public void OnDispose()
