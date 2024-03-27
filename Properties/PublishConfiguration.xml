@@ -1,0 +1,53 @@
+﻿<Publish>
+	<!--Id must be set in order to update existed mod. it is not required for publishing mod for the first time-->
+	<ModId Value="76583" />
+	<!--Name of the mod to display to players-->
+	<DisplayName Value="City Services Rebalance" />
+	<!--Short description of the mod-->
+	<ShortDescription Value="Increases number of workers in City Services plus other small adjustments." />
+	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
+	<!--LongDescription Value="Increases number of workers in City Services and other small adjustments." /-->
+	<LongDescription>
+Increases **number of workers** in City Services and does few other small adjustments (see below for details). The mod allows to use a local configuration, so you can tweak the parameters to your liking. New params are only applied to **new buildings**. If you want to change an existing building, it needs to be destroyed and plopped again.
+
+Number of configured buildings and extensions: **197**.
+
+##Features
+
+* All buildings have more workplaces and some have a bit different requirements as for what education levels are required. There is no formula used, all have been set manually taking into consideration various aspects. Some have only slightly more workers, but some have many more. You need to take a look into Config.xml or RealCity.log to find out about specific buildings.
+* Crematorium has 2x higher processing rate to handle increased deaths from Population Rebalance.
+* Post Sorting Facility have 2x higher sorting speed.
+* The mod can use a local (from Mods/RealCity) version of Config.xml that can be modified by a player.
+* New configuration can be applied even during the game.
+
+## Technical
+
+* The configuration is applied during the mod initialization and after clicking **Apply Configuration** button. It is possible to apply a new configuration during the game.
+* The mod does **not** modify savefiles.
+* The mod does **not** modify any game systems.
+* The mod can be turned off at any time. Already plopped buildings will retain modded params. New buildings will have ofc vanilla params.
+	</LongDescription>
+	<!--Thumbnail-->
+	<Thumbnail Value="Properties/Thumbnail.png" />
+	<!--Screenshot, can be set multiple times-->
+	<Screenshot Value="" />
+	<!--Tag, can be set multiple times-->
+	<Tag Value="Code Mod" />
+	<!--Link to the forum post where the mod can be discussed-->
+	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/city-services-rebalance.1647907/" />
+	<!--Version of the mod-->
+	<ModVersion Value="0.3" />
+	<!--Recommended version of the base game to use the mod-->
+	<GameVersion Value="1.1.*" />
+	<!--Dependency for the mod, can be set multiple times-->
+	<Dependency Id="" />
+	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
+	<!--ChangeLog Value="" /-->
+	<ChangeLog>
+v0.3.0 (2024-03-27)
+* Mod migrated to PDXMods platform and updated for v1.1.0 of the game.
+	</ChangeLog>
+	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
+	<ExternalLink Type="github" Url="https://github.com/Infixo/CS2-RealCity" />
+	<ExternalLink Type="discord" Url="https://discord.com/channels/1169011184557637825/1215734718654451892" />
+</Publish>
