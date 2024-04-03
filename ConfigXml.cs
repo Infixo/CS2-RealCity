@@ -8,6 +8,7 @@ namespace RealCity.Config;
 [XmlRoot("Configuration")]
 public class ConfigurationXml
 {
+	/*  
     [XmlArray("ValidPrefabTypes")]
     [XmlArrayItem(typeof(string), ElementName = "PrefabType")]
     public string[] ValidPrefabTypes;
@@ -17,6 +18,7 @@ public class ConfigurationXml
         if (ValidPrefabTypes is null || ValidPrefabTypes.Length == 0) return false;
         return Array.IndexOf(ValidPrefabTypes, nameToCheck) != -1;
     }
+	*/  
 
     [XmlElement("Prefab")]
     public List<PrefabXml> Prefabs { get; set; }
@@ -195,7 +197,7 @@ public static class ConfigToolXml
             }
             // Verify and output deserialized data
             //Plugin.Log($"NULL: {Settings is null}");
-            
+            /*
             if (Config.ValidPrefabTypes.Length == 0)
             {
                 Mod.log.Info("Warning! No valid prefab types are defined.");
@@ -206,7 +208,7 @@ public static class ConfigToolXml
                 foreach (string name in Config.ValidPrefabTypes)
                     Mod.LogIf(name);
             }
-            
+            */
             if (Mod.setting.Logging)
             {
                 Mod.log.Info("PREFAB CONFIG DATA");

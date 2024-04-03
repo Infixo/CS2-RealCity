@@ -8,7 +8,7 @@
 	<!--Long description of the mod. Single line or multi line. Supports minimal markdown subset-->
 	<!--LongDescription Value="Increases number of workers in City Services and other small adjustments." /-->
 	<LongDescription>
-Increases **number of workers** in City Services and does few other small adjustments (see below for details). The mod allows to use a local configuration, so you can tweak the parameters to your liking. New params are only applied to **new buildings**. If you want to change an existing building, it needs to be destroyed and plopped again.
+Tweaks and modifies City Services to your liking. The mod allows to change almost any parameter of the buildings and services. By default, it increases **number of workers** in City Services and does few other small adjustments (see below for details). The mod supports local configuration, so you can tweak the parameters as you wish. New params are only applied to **new buildings**. If you want to change an existing building, it needs to be destroyed and plopped again.
 
 Number of configured buildings and extensions: **197**.
 
@@ -19,6 +19,7 @@ Number of configured buildings and extensions: **197**.
 * Post Sorting Facility have 2x higher sorting speed.
 * The mod can use a local (from Mods/RealCity) version of Config.xml that can be modified by a player.
 * New configuration can be applied even during the game.
+* To add new components and parameters please refer to info and examples in Config.xml.
 
 ## Technical
 
@@ -36,7 +37,7 @@ Number of configured buildings and extensions: **197**.
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/city-services-rebalance.1647907/" />
 	<!--Version of the mod-->
-	<ModVersion Value="0.3" />
+	<ModVersion Value="0.4" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
@@ -44,6 +45,8 @@ Number of configured buildings and extensions: **197**.
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<!--ChangeLog Value="" /-->
 	<ChangeLog>
+v0.4.0 (2024-04-03)
+* Mod allows now to change almost any parameter of City Services buildings.
 v0.3.0 (2024-03-27)
 * Mod migrated to PDXMods platform and updated for v1.1.0 of the game.
 	</ChangeLog>
