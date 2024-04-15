@@ -37,19 +37,14 @@ Number of configured buildings and extensions: **197**.
 	<!--Link to the forum post where the mod can be discussed-->
 	<ForumLink Value="https://forum.paradoxplaza.com/forum/threads/city-services-rebalance.1647907/" />
 	<!--Version of the mod-->
-	<ModVersion Value="0.4" />
+	<ModVersion Value="0.4.1" />
 	<!--Recommended version of the base game to use the mod-->
 	<GameVersion Value="1.1.*" />
 	<!--Dependency for the mod, can be set multiple times-->
 	<Dependency Id="" />
 	<!--Change log for new version. Single line or multi line. Supports minimal markdown subset-->
 	<!--ChangeLog Value="" /-->
-	<ChangeLog>
-v0.4.0 (2024-04-03)
-* Mod allows now to change almost any parameter of City Services buildings.
-v0.3.0 (2024-03-27)
-* Mod migrated to PDXMods platform and updated for v1.1.0 of the game.
-	</ChangeLog>
+	<ChangeLog>Support for fields of type: byte, short, uint.</ChangeLog>
 	<!--External link. supported types are discord, github, youtube, twitch, x, paypal, patreon-->
 	<ExternalLink Type="github" Url="https://github.com/Infixo/CS2-RealCity" />
 	<ExternalLink Type="discord" Url="https://discord.com/channels/1169011184557637825/1215734718654451892" />

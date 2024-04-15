@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Collections.Generic;
 using Unity.Entities;
+using Unity.Mathematics;
 using Game.Prefabs;
 using Game.Economy;
 
@@ -80,15 +81,31 @@ public static class ConfigTool
 				{
 					object oldValue = field.GetValue(component);
 
-					// TODO: extend for other field types
-					if (field.FieldType == typeof(float))
-					{
-						field.SetValue(component, fieldConfig.ValueFloat);
-					}
-					else
-					{
-						field.SetValue(component, fieldConfig.ValueInt);
-					}
+                    // TODO: extend for other field types
+                    if (field.FieldType == typeof(int))
+                    {
+                        field.SetValue(component, fieldConfig.ValueInt ?? 0);
+                    }
+                    if (field.FieldType == typeof(float))
+                    {
+                        field.SetValue(component, fieldConfig.ValueFloat ?? 0f);
+                    }
+                    else if (field.FieldType == typeof(uint))
+                    {
+                        field.SetValue(component, (uint)math.clamp(fieldConfig.ValueInt ?? 0, 0, int.MaxValue));
+                    }
+                    else if (field.FieldType == typeof(short))
+                    {
+                        field.SetValue(component, (short)math.clamp(fieldConfig.ValueInt ?? 0, short.MinValue, short.MaxValue));
+                    }
+                    else if (field.FieldType == typeof(byte))
+                    {
+                        field.SetValue(component, (byte)math.clamp(fieldConfig.ValueInt ?? 0, 0, byte.MaxValue));
+                    }
+                    else
+                    {
+                        field.SetValue(component, fieldConfig.ValueInt ?? 0);
+                    }
 					if (Mod.setting.Logging)
 						Mod.Log($"{prefab.name}.{compName}.{field.Name}: {oldValue} -> {field.GetValue(component)} ({field.FieldType}, {fieldConfig})");
 					else

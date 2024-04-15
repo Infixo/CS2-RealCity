@@ -31,28 +31,15 @@ Number of configured buildings and extensions: **197**.
 
 ### Requirements and Compatibility
 - Cities Skylines II version 1.1.0f1 or later; check GitHub or Discord if the mod is compatible with the latest game version.
-- BepInEx 5.
 - The mod does NOT modify savefiles.
 - The mod does NOT modify game systems.
-
-### Installation
-1. Place the `RealCity.dll` file in your BepInEx `Plugins` folder.
-2. The BepInEx config file is automatically created in BepInEx\config when the game is run once.
+- The mod uses Cities: Skylines 2 Mod Template by Captain-Of-Coit.
 
 ### Known Issues
 - Nothing atm.
 
-### Changelog
-- v0.2.0 (2024-03-20)
-  - Mod updated for v1.1 of the game.
-- v0.1.0 (2024-03-08)
-  - Initial build.
+### [Changelog](./CHANGELOG.md)
 
 ### Support
 - Please report bugs and issues on [GitHub](https://github.com/Infixo/CS2-RealCity).
-- You may also leave comments on [Discord1](https://discord.com/channels/1169011184557637825/1215734718654451892) or [Discord2](https://discord.com/channels/1024242828114673724/1215735062428123196).
-
-## Disclaimers and Notes
-
-> [!NOTE]
-The mod uses Cities: Skylines 2 Mod Template by Captain-Of-Coit.
+- You may also leave comments on [Discord](https://discord.com/channels/1169011184557637825/1215734718654451892).

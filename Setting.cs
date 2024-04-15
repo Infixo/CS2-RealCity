@@ -61,7 +61,7 @@ public class LocaleEN : IDictionarySource
     {
         return new Dictionary<string, string>
         {
-            { m_Setting.GetSettingsLocaleID(), "City Services Rebalance v0.3" },
+            { m_Setting.GetSettingsLocaleID(), $"City Services Rebalance {Mod.modAsset.version}" },
             { m_Setting.GetOptionTabLocaleID(Setting.kSection), "Main" },
 
             { m_Setting.GetOptionGroupLocaleID(Setting.kToggleGroup), "Options" },
